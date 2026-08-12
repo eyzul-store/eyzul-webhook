@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eyzulstore - Reseller Resmi Sekalipay</title>
+    <title>Eyzulstore - Top-Up Digital</title>
     <!-- Menggunakan Bootstrap & FontAwesome untuk reka bentuk kedai yang sangat kemas dan moden -->
     <link href="https://jsdelivr.net" rel="stylesheet">
     <link href="https://cloudflare.com" rel="stylesheet">
@@ -15,7 +15,6 @@
         .form-control:focus, .form-select:focus { background-color: #0f172a; border-color: #38bdf8; color: #ffffff; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
         .btn-primary-custom { background: linear-gradient(135deg, #38bdf8, #0284c7); border: none; color: white; font-weight: 600; padding: 12px; border-radius: 8px; transition: all 0.3s; }
         .btn-primary-custom:hover { background: linear-gradient(135deg, #0284c7, #0369a1); transform: translateY(-2px); }
-        .badge-status { background-color: #0284c7; font-size: 0.8rem; padding: 5px 10px; border-radius: 20px; }
         footer { margin-top: 50px; color: #64748b; font-size: 0.9rem; }
     </style>
 </head>
@@ -23,9 +22,8 @@
 
     <!-- Header / Navbar Kedai -->
     <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
-        <div class="container py-2">
-            <a class="navbar-brand fw-bold text-info" href="#"><i class="fa-solid fa-gamepad me-2"></i>EYZULSTORE</a>
-            <span class="badge badge-status"><i class="fa-solid fa-circle-check me-1"></i> Verified Reseller</span>
+        <div class="container py-2 justify-content-center">
+            <a class="navbar-brand fw-bold text-info fs-3" href="#"><i class="fa-solid fa-gamepad me-2"></i>EYZULSTORE</a>
         </div>
     </nav>
 
@@ -36,7 +34,7 @@
                 
                 <!-- Kotak Amaran Kuning Sekiranya Sistem Gagal Sambung -->
                 <div id="error-message" class="alert alert-warning border-warning shadow-sm mb-4" style="display: none; background-color: #fef08a; color: #713f12;">
-                    <i class="fa-solid fa-triangle-exclamation me-2"></i> <strong>Gagal menarik seluruh menu database Sekalipay.</strong> Sila semak sambungan API Key biskita.
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i> <strong>Gagal menarik seluruh menu database.</strong> Sila semak sambungan API Key biskita.
                 </div>
 
                 <div class="card card-custom p-4">
@@ -46,7 +44,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-semibold"><i class="fa-solid fa-layer-group me-2 text-secondary"></i>1. Pilih Layanan / Produk</label>
                         <select id="product-select" class="form-select form-select-lg">
-                            <option value="">-- Memuatkan menu produk Sekalipay... --</option>
+                            <option value="">-- Memuatkan menu produk... --</option>
                         </select>
                     </div>
 
@@ -70,7 +68,7 @@
     <!-- Footer Kedai -->
     <footer class="text-center py-4">
         <div class="container">
-            <p>&copy; 2026 <strong>Eyzulstore</strong>. Powered by Sekalipay API Gateway.</p>
+            <p>&copy; 2026 <strong>Eyzulstore</strong>. Hak Cipta Terpelihara.</p>
         </div>
     </footer>
 
@@ -79,7 +77,7 @@
         // Pautan Domain Utama Vercel Biskita Yang Sudah Sah Hijau [image_V1fU-u.png]
         const BACKEND_URL = 'https://vercel.app';
 
-        // 1. Fungsi Utama Mengambil Senarai Katalog Produk Dari Sekalipay
+        // 1. Fungsi Utama Mengambil Senarai Katalog Produk
         async function muatKatalogLayanan() {
             try {
                 const res = await fetch(`${BACKEND_URL}/api/get-catalog`);
@@ -94,13 +92,11 @@
                     
                     senaraiProduk.forEach(item => {
                         let opt = document.createElement('option');
-                        // Memetakan nilai harga dan nama mengikut struktur data Sekalipay [image_BgxBB-.png]
                         opt.value = item.price || item.harga || '0'; 
                         opt.innerText = `${item.name || item.layanan} - Rp ${Number(item.price || item.harga).toLocaleString('id-ID')}`;
                         selectElement.appendChild(opt);
                     });
                 } else {
-                    // Papar ralat kuning jika data dari Sekalipay kosong atau tidak sah [image_PRndge.png]
                     document.getElementById('error-message').style.display = 'block';
                 }
             } catch (err) {
@@ -109,7 +105,7 @@
             }
         }
 
-        // 2. Fungsi Utama Memproses Pembelian & Menjana Resit Pembayaran Sekalipay
+        // 2. Fungsi Utama Memproses Pembelian & Menjana Resit Pembayaran
         async function prosesTransaksi() {
             const price = document.getElementById('product-select').value;
             const target = document.getElementById('target-id').value;
@@ -122,7 +118,6 @@
             }
 
             try {
-                // Menghantar data pembelian ke fail api/create-payment.js di Vercel [image_V1fU-u.png]
                 const res = await fetch(`${BACKEND_URL}/api/create-payment`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -135,12 +130,11 @@
                 
                 const data = await res.json();
                 
-                // Jika Sekalipay membalas dengan link pembayaran, bawa pelanggan ke sana [image_lesWMz.png]
                 if (data && (data.payment_url || data.url || (data.data && data.data.payment_url))) {
                     const urlBayar = data.payment_url || data.url || data.data.payment_url;
                     window.location.href = urlBayar; 
                 } else {
-                    alert('Gagal menjana transaksi. Sila pastikan baki akait reseller biskita mencukupi.');
+                    alert('Gagal menjana transaksi. Sila pastikan baki akaun biskita mencukupi.');
                 }
             } catch (err) {
                 console.error('Ralat Pembayaran:', err);
