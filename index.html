@@ -25,9 +25,9 @@
 
 <div class="container">
     <h2>🏪 Eyzulstore 🦋</h2>
-    <p class="subtitle">Layanan Top-Up Game & Voucher Instan</p>
+    <p class="subtitle">Aplikasi, Game, Pulsa & Layanan Digital Lengkap</p>
     
-    <!-- Dynamic Target Section -->
+    <!-- Universal Input Form Section -->
     <div id="targetFormContainer">
         <label id="mainInputLabel" for="targetAccount">ID Akun Tujuan / Nomor HP</label>
         <div class="flex-inputs">
@@ -40,12 +40,12 @@
         </div>
     </div>
     
-    <!-- Dynamic Product Menu -->
-    <label for="productCode">Pilih Produk & Nominal</label>
+    <!-- Universal Product Dropdown -->
+    <label for="productCode">Pilih Layanan & Produk</label>
     <select id="productCode" onchange="handleProductChange()">
-        <option value="">-- Memuat Semua Produk Live... --</option>
+        <option value="">-- Memuat Semua Layanan Live... --</option>
     </select>
-    <span id="syncStatus" class="status-msg">🔄 Menghubungkan ke katalog live...</span>
+    <span id="syncStatus" class="status-msg">🔄 Menghubungkan seluruh database Sekalipay...</span>
 
     <button id="orderBtn" onclick="submitResellerOrder()" disabled>Beli Sekarang</button>
 </div>
@@ -64,17 +64,17 @@ async function loadFullLiveCatalog() {
         const data = await res.json();
 
         if (data.success && data.products.length > 0) {
-            dropdown.innerHTML = '<option value="">-- Pilih Paket Topup Game --</option>';
+            dropdown.innerHTML = '<option value="">-- Pilih Produk / Paket --</option>';
             
-            // Categorize array items neatly by game group structure
+            // Groups absolutely everything dynamically by its original category label
             let groupedItems = {};
             data.products.forEach(item => {
-                let categoryName = item.game_name || item.category || "Voucher / Lainnya";
+                let categoryName = item.game_name || item.category || "Layanan Premium / Aplikasi";
                 if (!groupedItems[categoryName]) groupedItems[categoryName] = [];
                 groupedItems[categoryName].push(item);
             });
 
-            // Render categories and items dynamically onto the select layout
+            // Loop through all categorized items and insert them into the selection UI
             for (let category in groupedItems) {
                 const group = document.createElement('optgroup');
                 group.label = category;
@@ -86,7 +86,7 @@ async function loadFullLiveCatalog() {
                     option.textContent = `${item.name} (${cleanPrice})`;
                     group.appendChild(option);
 
-                    // Track details for invoice routing operations
+                    // Map all details into local browser memory
                     completeInventoryMap[item.code] = {
                         price: item.price,
                         name: `${category} ${item.name}`,
@@ -96,16 +96,16 @@ async function loadFullLiveCatalog() {
                 dropdown.appendChild(group);
             }
 
-            syncStatus.innerText = "✅ Semua game terupdate otomatis & siap surfing!";
+            syncStatus.innerText = "✅ Semua Produk Sekalipay Berhasil Dimuat Live!";
             syncStatus.style.color = "#4caf50";
             orderBtn.disabled = false;
         } else {
-            throw new Error("Empty data container");
+            throw new Error("Empty inventory stream");
         }
     } catch (err) {
         console.error(err);
-        dropdown.innerHTML = '<option value="">Gagal memuat katalog live. Segera refresh.</option>';
-        syncStatus.innerText = "⚠️ Gagal tersambung otomatis dengan catalog Sekalipay.";
+        dropdown.innerHTML = '<option value="">Gagal sinkronisasi data. Muat ulang halaman.</option>';
+        syncStatus.innerText = "⚠️ Gagal menarik seluruh menu database Sekalipay.";
         syncStatus.style.color = "#ffdd00";
     }
 }
@@ -120,18 +120,22 @@ function handleProductChange() {
     
     const activeItem = completeInventoryMap[selection];
 
-    // Smart Input Modifier: Adapts labels and split input boxes dynamically based on game types
+    // Smart Forms Adaptor: Handles Zone IDs for Games and structures inputs for phone numbers, apps, or links
     if (activeItem.game.includes("mobile legends") || activeItem.game.includes("mlbb")) {
         mainLabel.innerText = "Data Akun Mobile Legends";
         mainInput.placeholder = "User ID (Contoh: 12345678)";
         zoneBox.style.display = "block";
-    } else if (activeItem.game.includes("dana") || activeItem.game.includes("pulsa") || activeItem.game.includes("gopay") || activeItem.game.includes("ovo")) {
+    } else if (activeItem.game.includes("dana") || activeItem.game.includes("pulsa") || activeItem.game.includes("gopay") || activeItem.game.includes("ovo") || activeItem.game.includes("linkaja") || activeItem.game.includes("shopeepay")) {
         mainLabel.innerText = "Nomor Handphone Tujuan";
         mainInput.placeholder = "Contoh: 081234567890";
         zoneBox.style.display = "none";
+    } else if (activeItem.game.includes("premium") || activeItem.game.includes("aplikasi") || activeItem.game.includes("streaming") || activeItem.game.includes("netflix") || activeItem.game.includes("spotify")) {
+        mainLabel.innerText = "Email Pengguna / Kontak WhatsApp Pembeli";
+        mainInput.placeholder = "Contoh: nama@email.com atau WhatsApp";
+        zoneBox.style.display = "none";
     } else {
-        mainLabel.innerText = "Target ID / Karakter Akun";
-        mainInput.placeholder = "Masukkan Player ID Akun";
+        mainLabel.innerText = "Target ID Akun / Nomor Pemesanan";
+        mainInput.placeholder = "Masukkan Player ID atau Akun Tujuan";
         zoneBox.style.display = "none";
     }
 }
@@ -143,17 +147,17 @@ async function submitResellerOrder() {
     const selectedProduct = document.getElementById('productCode').value;
 
     if (!idInput) {
-        alert("Mohon isi nomor ID akun / Nomor HP target!");
+        alert("Mohon isi kolom data target pengiriman!");
         return;
     }
 
     const activeItem = completeInventoryMap[selectedProduct];
     
-    // Automatically compile standard unified string markers for H2H systems
+    // Auto-compiles composite fields for database queries
     let calculatedTarget = idInput;
     if (activeItem.game.includes("mobile legends") || activeItem.game.includes("mlbb")) {
         if (!zoneInput) {
-            alert("Mohon masukkan Zone ID/Server Game kamu!");
+            alert("Mohon masukkan Zone ID/Server Game Anda!");
             return;
         }
         calculatedTarget = `${idInput}(${zoneInput})`;
@@ -178,13 +182,13 @@ async function submitResellerOrder() {
         if (result.success && result.paymentUrl) {
             window.location.href = result.paymentUrl;
         } else {
-            alert("Gagal memproses pembayaran: " + (result.message || "Periksa kembali data Anda."));
+            alert("Gagal memproses kasir: " + (result.message || "Periksa data input Anda."));
             orderBtn.innerText = "Beli Sekarang";
             orderBtn.disabled = false;
         }
     } catch (err) {
         console.error(err);
-        alert("Terjadi gangguan komunikasi data.");
+        alert("Terjadi masalah komunikasi data ke backend.");
         orderBtn.innerText = "Beli Sekarang";
         orderBtn.disabled = false;
     }
