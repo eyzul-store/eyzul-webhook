@@ -6,139 +6,170 @@
     <title>Eyzulstore 🦋</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f0f12; color: #f5f5f7; padding: 20px; text-align: center; }
-        .container { max-width: 420px; margin: 40px auto; background: #1a1a24; padding: 24px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #2e2e3f; }
-        h2 { margin-bottom: 5px; color: #50b6ff; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        p { color: #9898a0; font-size: 14px; margin-bottom: 25px; }
-        label { display: block; text-align: left; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
-        input, select, button { width: 100%; padding: 14px; margin-bottom: 20px; border-radius: 8px; border: none; box-sizing: border-box; font-size: 15px; }
+        .container { max-width: 440px; margin: 30px auto; background: #1a1a24; padding: 24px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #2e2e3f; text-align: left; }
+        h2 { text-align: center; color: #50b6ff; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        p.subtitle { text-align: center; color: #9898a0; font-size: 14px; margin-bottom: 25px; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; margin-top: 15px; }
+        input, select, button { width: 100%; padding: 14px; border-radius: 8px; border: none; box-sizing: border-box; font-size: 15px; margin-top: 5px; }
         input, select { background: #0f0f12; color: #fff; border: 1px solid #3a3a4e; transition: 0.2s; }
         input:focus, select:focus { border-color: #50b6ff; outline: none; }
-        button { background: #50b6ff; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .flex-inputs { display: flex; gap: 10px; }
+        .flex-inputs div { flex: 1; }
+        button { background: #50b6ff; color: #000; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.2s; }
         button:hover { background: #3fa5ef; }
         button:disabled { background: #4b5563; color: #9ca3af; cursor: not-allowed; }
+        .status-msg { font-size: 12px; color: #50b6ff; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>🏪 Eyzulstore 🦋</h2>
-    <p>Layanan Top-Up Game & Voucher Instan</p>
+    <p class="subtitle">Layanan Top-Up Game & Voucher Instan</p>
     
-    <label for="targetAccount">Target ID Akun (Game ID / Nomor Tujuan)</label>
-    <input type="text" id="targetAccount" placeholder="Contoh: 12345678 (2345)" required>
+    <!-- Dynamic Target Section -->
+    <div id="targetFormContainer">
+        <label id="mainInputLabel" for="targetAccount">ID Akun Tujuan / Nomor HP</label>
+        <div class="flex-inputs">
+            <div id="userIdBox">
+                <input type="text" id="targetAccount" placeholder="Contoh: 12345678" required>
+            </div>
+            <div id="zoneIdBox" style="display: none;">
+                <input type="text" id="targetZone" placeholder="Zona/Server (1234)">
+            </div>
+        </div>
+    </div>
     
-    <label for="productCode">Pilih Produk & Nominal Game</label>
-    <select id="productCode">
-        <!-- 🎮 FULL COMPREHENSIVE PRODUCT CATALOG LIST -->
-        <optgroup label="Mobile Legends (MLBB)">
-            <option value="ML_BB_86">Mobile Legends — 86 Diamonds (Rp 20.000)</option>
-            <option value="ML_BB_172">Mobile Legends — 172 Diamonds (Rp 40.000)</option>
-            <option value="ML_BB_257">Mobile Legends — 257 Diamonds (Rp 60.000)</option>
-            <option value="ML_BB_344">Mobile Legends — 344 Diamonds (Rp 80.000)</option>
-            <option value="ML_BB_429">Mobile Legends — 429 Diamonds (Rp 100.000)</option>
-            <option value="ML_BB_WTP">Mobile Legends — Weekly Diamond Pass (Rp 28.000)</option>
-        </optgroup>
-        <optgroup label="Free Fire (FF)">
-            <option value="FF_140">Free Fire — 140 Diamonds (Rp 19.000)</option>
-            <option value="FF_355">Free Fire — 355 Diamonds (Rp 47.000)</option>
-            <option value="FF_720">Free Fire — 720 Diamonds (Rp 93.000)</option>
-            <option value="FF_1440">Free Fire — 1440 Diamonds (Rp 185.000)</option>
-        </optgroup>
-        <optgroup label="PUBG Mobile">
-            <option value="PUBG_60">PUBG Mobile — 60 UC (Rp 14.500)</option>
-            <option value="PUBG_325">PUBG Mobile — 325 UC (Rp 71.000)</option>
-            <option value="PUBG_660">PUBG Mobile — 660 UC (Rp 142.000)</option>
-            <option value="PUBG_1800">PUBG Mobile — 1800 UC (Rp 355.000)</option>
-        </optgroup>
-        <optgroup label="Honor of Kings (HOK)">
-            <option value="HOK_80">Honor of Kings — 80 Tokens (Rp 16.000)</option>
-            <option value="HOK_240">Honor of Kings — 240 Tokens (Rp 47.500)</option>
-            <option value="HOK_400">Honor of Kings — 400 Tokens (Rp 78.000)</option>
-            <option value="HOK_800">Honor of Kings — 800 Tokens (Rp 155.000)</option>
-        </optgroup>
-        <optgroup label="Genshin Impact">
-            <option value="GENSHIN_60">Genshin Impact — 60 Crystals (Rp 16.500)</option>
-            <option value="GENSHIN_300">Genshin Impact — 300 Crystals (Rp 79.000)</option>
-            <option value="GENSHIN_980">Genshin Impact — 980 Crystals (Rp 239.000)</option>
-            <option value="GENSHIN_WM">Genshin Impact — Welkin Moon Blessing (Rp 79.000)</option>
-        </optgroup>
-        <optgroup label="E-Wallet Top-Up">
-            <option value="DANA_20">Dana — Saldo Rp 20.000 (Rp 21.500)</option>
-            <option value="DANA_50">Dana — Saldo Rp 50.000 (Rp 51.200)</option>
-            <option value="DANA_100">Dana — Saldo Rp 100.000 (Rp 100.900)</option>
-            <option value="GOPAY_20">GoPay — Saldo Rp 20.000 (Rp 21.500)</option>
-            <option value="GOPAY_50">GoPay — Saldo Rp 50.000 (Rp 51.200)</option>
-        </optgroup>
-        <optgroup label="Pulsa Isi Ulang">
-            <option value="TSEL_20">Pulsa Telkomsel — Rp 20.000 (Rp 20.900)</option>
-            <option value="TSEL_50">Pulsa Telkomsel — Rp 50.000 (Rp 50.500)</option>
-            <option value="ISAT_20">Pulsa Indosat — Rp 20.000 (Rp 21.000)</option>
-            <option value="XL_20">Pulsa XL Axiata — Rp 20.000 (Rp 21.100)</option>
-        </optgroup>
+    <!-- Dynamic Product Menu -->
+    <label for="productCode">Pilih Produk & Nominal</label>
+    <select id="productCode" onchange="handleProductChange()">
+        <option value="">-- Memuat Semua Produk Live... --</option>
     </select>
+    <span id="syncStatus" class="status-msg">🔄 Menghubungkan ke katalog live...</span>
 
-    <button id="orderBtn" onclick="submitResellerOrder()">Beli Sekarang</button>
+    <button id="orderBtn" onclick="submitResellerOrder()" disabled>Beli Sekarang</button>
 </div>
 
 <script>
-// Price configuration map matching the values selected inside the options box dropdown rows above
-const internalPriceCatalog = {
-    "ML_BB_86": { price: 20000, name: "Mobile Legends 86 Diamonds" },
-    "ML_BB_172": { price: 40000, name: "Mobile Legends 172 Diamonds" },
-    "ML_BB_257": { price: 60000, name: "Mobile Legends 257 Diamonds" },
-    "ML_BB_344": { price: 80000, name: "Mobile Legends 344 Diamonds" },
-    "ML_BB_429": { price: 100000, name: "Mobile Legends 429 Diamonds" },
-    "ML_BB_WTP": { price: 28000, name: "Mobile Legends Weekly Diamond Pass" },
-    "FF_140": { price: 19000, name: "Free Fire 140 Diamonds" },
-    "FF_355": { price: 47000, name: "Free Fire 355 Diamonds" },
-    "FF_720": { price: 93000, name: "Free Fire 720 Diamonds" },
-    "FF_1440": { price: 185000, name: "Free Fire 1440 Diamonds" },
-    "PUBG_60": { price: 14500, name: "PUBG Mobile 60 UC" },
-    "PUBG_325": { price: 71000, name: "PUBG Mobile 325 UC" },
-    "PUBG_660": { price: 142000, name: "PUBG Mobile 660 UC" },
-    "PUBG_1800": { price: 355000, name: "PUBG Mobile 1800 UC" },
-    "HOK_80": { price: 16000, name: "Honor of Kings 80 Tokens" },
-    "HOK_240": { price: 47500, name: "Honor of Kings 240 Tokens" },
-    "HOK_400": { price: 78000, name: "Honor of Kings 400 Tokens" },
-    "HOK_800": { price: 155000, name: "Honor of Kings 800 Tokens" },
-    "GENSHIN_60": { price: 16500, name: "Genshin Impact 60 Genesis Crystals" },
-    "GENSHIN_300": { price: 79000, name: "Genshin Impact 300 Genesis Crystals" },
-    "GENSHIN_980": { price: 239000, name: "Genshin Impact 980 Genesis Crystals" },
-    "GENSHIN_WM": { price: 79000, name: "Genshin Impact Welkin Moon Blessing" },
-    "DANA_20": { price: 21500, name: "Topup Saldo Dana 20K" },
-    "DANA_50": { price: 51200, name: "Topup Saldo Dana 50K" },
-    "DANA_100": { price: 100900, name: "Topup Saldo Dana 100K" },
-    "GOPAY_20": { price: 21500, name: "Topup Saldo GoPay 20K" },
-    "GOPAY_50": { price: 51200, name: "Topup Saldo GoPay 50K" },
-    "TSEL_20": { price: 20900, name: "Pulsa Telkomsel 20K" },
-    "TSEL_50": { price: 50500, name: "Pulsa Telkomsel 50K" },
-    "ISAT_20": { price: 21000, name: "Pulsa Indosat 20K" },
-    "XL_20": { price: 21100, name: "Pulsa XL Axiata 20K" }
-};
+document.addEventListener("DOMContentLoaded", loadFullLiveCatalog);
+let completeInventoryMap = {};
+
+async function loadFullLiveCatalog() {
+    const dropdown = document.getElementById('productCode');
+    const syncStatus = document.getElementById('syncStatus');
+    const orderBtn = document.getElementById('orderBtn');
+
+    try {
+        const res = await fetch('/api/get-catalog');
+        const data = await res.json();
+
+        if (data.success && data.products.length > 0) {
+            dropdown.innerHTML = '<option value="">-- Pilih Paket Topup Game --</option>';
+            
+            // Categorize array items neatly by game group structure
+            let groupedItems = {};
+            data.products.forEach(item => {
+                let categoryName = item.game_name || item.category || "Voucher / Lainnya";
+                if (!groupedItems[categoryName]) groupedItems[categoryName] = [];
+                groupedItems[categoryName].push(item);
+            });
+
+            // Render categories and items dynamically onto the select layout
+            for (let category in groupedItems) {
+                const group = document.createElement('optgroup');
+                group.label = category;
+                
+                groupedItems[category].forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.code;
+                    const cleanPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(item.price);
+                    option.textContent = `${item.name} (${cleanPrice})`;
+                    group.appendChild(option);
+
+                    // Track details for invoice routing operations
+                    completeInventoryMap[item.code] = {
+                        price: item.price,
+                        name: `${category} ${item.name}`,
+                        game: category.toLowerCase()
+                    };
+                });
+                dropdown.appendChild(group);
+            }
+
+            syncStatus.innerText = "✅ Semua game terupdate otomatis & siap surfing!";
+            syncStatus.style.color = "#4caf50";
+            orderBtn.disabled = false;
+        } else {
+            throw new Error("Empty data container");
+        }
+    } catch (err) {
+        console.error(err);
+        dropdown.innerHTML = '<option value="">Gagal memuat katalog live. Segera refresh.</option>';
+        syncStatus.innerText = "⚠️ Gagal tersambung otomatis dengan catalog Sekalipay.";
+        syncStatus.style.color = "#ffdd00";
+    }
+}
+
+function handleProductChange() {
+    const selection = document.getElementById('productCode').value;
+    const zoneBox = document.getElementById('zoneIdBox');
+    const mainLabel = document.getElementById('mainInputLabel');
+    const mainInput = document.getElementById('targetAccount');
+
+    if (!selection || !completeInventoryMap[selection]) return;
+    
+    const activeItem = completeInventoryMap[selection];
+
+    // Smart Input Modifier: Adapts labels and split input boxes dynamically based on game types
+    if (activeItem.game.includes("mobile legends") || activeItem.game.includes("mlbb")) {
+        mainLabel.innerText = "Data Akun Mobile Legends";
+        mainInput.placeholder = "User ID (Contoh: 12345678)";
+        zoneBox.style.display = "block";
+    } else if (activeItem.game.includes("dana") || activeItem.game.includes("pulsa") || activeItem.game.includes("gopay") || activeItem.game.includes("ovo")) {
+        mainLabel.innerText = "Nomor Handphone Tujuan";
+        mainInput.placeholder = "Contoh: 081234567890";
+        zoneBox.style.display = "none";
+    } else {
+        mainLabel.innerText = "Target ID / Karakter Akun";
+        mainInput.placeholder = "Masukkan Player ID Akun";
+        zoneBox.style.display = "none";
+    }
+}
 
 async function submitResellerOrder() {
     const orderBtn = document.getElementById('orderBtn');
-    const targetInput = document.getElementById('targetAccount').value.trim();
+    const idInput = document.getElementById('targetAccount').value.trim();
+    const zoneInput = document.getElementById('targetZone').value.trim();
     const selectedProduct = document.getElementById('productCode').value;
 
-    if (!targetInput) {
-        alert("Mohon masukkan target ID akun atau nomor tujuan pembeli!");
+    if (!idInput) {
+        alert("Mohon isi nomor ID akun / Nomor HP target!");
         return;
+    }
+
+    const activeItem = completeInventoryMap[selectedProduct];
+    
+    // Automatically compile standard unified string markers for H2H systems
+    let calculatedTarget = idInput;
+    if (activeItem.game.includes("mobile legends") || activeItem.game.includes("mlbb")) {
+        if (!zoneInput) {
+            alert("Mohon masukkan Zone ID/Server Game kamu!");
+            return;
+        }
+        calculatedTarget = `${idInput}(${zoneInput})`;
     }
 
     orderBtn.innerText = "Membuka Kasir Pembayaran...";
     orderBtn.disabled = true;
 
     try {
-        const itemDetails = internalPriceCatalog[selectedProduct];
-
         const response = await fetch('/api/create-payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                priceAmount: itemDetails.price,
-                targetId: targetInput,
-                productName: itemDetails.name
+                priceAmount: activeItem.price,
+                targetId: calculatedTarget,
+                productName: activeItem.name
             })
         });
 
@@ -147,13 +178,13 @@ async function submitResellerOrder() {
         if (result.success && result.paymentUrl) {
             window.location.href = result.paymentUrl;
         } else {
-            alert("Gagal memproses kasir: " + (result.message || "Periksa konfigurasi Vercel API Key Anda."));
+            alert("Gagal memproses pembayaran: " + (result.message || "Periksa kembali data Anda."));
             orderBtn.innerText = "Beli Sekarang";
             orderBtn.disabled = false;
         }
     } catch (err) {
         console.error(err);
-        alert("Terjadi masalah komunikasi data ke backend gateway.");
+        alert("Terjadi gangguan komunikasi data.");
         orderBtn.innerText = "Beli Sekarang";
         orderBtn.disabled = false;
     }
