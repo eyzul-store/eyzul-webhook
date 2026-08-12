@@ -16,6 +16,7 @@
         button { background: #50b6ff; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
         button:hover { background: #3fa5ef; }
         button:disabled { background: #4b5563; color: #9ca3af; cursor: not-allowed; }
+        .loading-text { font-size: 12px; color: #50b6ff; text-align: left; margin-top: -15px; margin-bottom: 15px; display: block; }
     </style>
 </head>
 <body>
@@ -27,52 +28,93 @@
     <label for="targetAccount">Target ID Akun (Game ID / Nomor Tujuan)</label>
     <input type="text" id="targetAccount" placeholder="Contoh: 12345678 (2345)" required>
     
-    <label for="productCode">Pilih Nominal Produk</label>
+    <label for="productCode">Pilih Produk & Nominal Game</label>
     <select id="productCode">
-        <option value="ML_BB_86">Mobile Legends — 86 Diamonds (Rp 20.000)</option>
-        <option value="ML_BB_172">Mobile Legends — 172 Diamonds (Rp 40.000)</option>
-        <option value="FF_140">Free Fire — 140 Diamonds (Rp 19.000)</option>
-        <option value="PUBG_60">PUBG Mobile — 60 UC (Rp 14.500)</option>
+        <option value="">-- Memuat Produk Live Sekalipay... --</option>
     </select>
+    <span id="syncStatus" class="loading-text">🔄 Mengambil produk terbaru...</span>
 
-    <button id="orderBtn" onclick="submitResellerOrder()">Beli Sekarang</button>
+    <button id="orderBtn" onclick="submitResellerOrder()" disabled>Beli Sekarang</button>
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", fetchLiveProducts);
+let productListPriceMap = {};
+
+async function fetchLiveProducts() {
+    const dropdown = document.getElementById('productCode');
+    const syncStatus = document.getElementById('syncStatus');
+    const orderBtn = document.getElementById('orderBtn');
+
+    try {
+        const res = await fetch('/api/get-catalog');
+        const data = await res.json();
+
+        if (data.success && data.products.length > 0) {
+            dropdown.innerHTML = '<option value="">-- Pilih Paket Game Kamu --</option>';
+            data.products.forEach(item => {
+                const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(item.price);
+                const option = document.createElement('option');
+                option.value = item.code;
+                option.textContent = `${item.game_name || item.category} — ${item.name} (${formattedPrice})`;
+                dropdown.appendChild(option);
+                productListPriceMap[item.code] = { price: item.price, name: `${item.game_name} ${item.name}` };
+            });
+            syncStatus.innerText = "✅ Semua game terupdate otomatis & siap surfing!";
+            syncStatus.style.color = "#4caf50";
+            orderBtn.disabled = false;
+        } else {
+            dropdown.innerHTML = '<option value="">Gagal memuat produk. Refresh halaman.</option>';
+            syncStatus.innerText = "⚠️ Gagal tersambung otomatis dengan catalog Sekalipay.";
+            syncStatus.style.color = "#ffdd00";
+        }
+    } catch (err) {
+        console.error(err);
+        dropdown.innerHTML = '<option value="">Gagal memuat sistem.</option>';
+    }
+}
+
 async function submitResellerOrder() {
     const orderBtn = document.getElementById('orderBtn');
     const targetInput = document.getElementById('targetAccount').value.trim();
     const selectedProduct = document.getElementById('productCode').value;
 
+    if (!selectedProduct) {
+        alert("Silahkan pilih produk game terlebih dahulu!");
+        return;
+    }
     if (!targetInput) {
-        alert("Mohon masukkan nomor target akun pengguna!");
+        alert("Mohon masukkan target ID akun pengguna!");
         return;
     }
 
-    orderBtn.innerText = "Memproses Transaksi...";
+    orderBtn.innerText = "Membuka Kasir Pembayaran...";
     orderBtn.disabled = true;
 
     try {
-        const response = await fetch('/api/place-order', {
+        const currentSelection = productListPriceMap[selectedProduct];
+        const response = await fetch('/api/create-payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                uniqueProductCode: selectedProduct,
-                targetCustomerAccount: targetInput
+                priceAmount: currentSelection.price,
+                targetId: targetInput,
+                productName: currentSelection.name
             })
         });
 
         const result = await response.json();
 
-        if (result.success) {
-            alert("Transaksi Berhasil dikirim! Item akan masuk secara otomatis ke akun pembeli.");
+        if (result.success && result.paymentUrl) {
+            window.location.href = result.paymentUrl;
         } else {
-            alert("Gagal memproses transaksi: " + (result.message || "Saldo tidak cukup atau produk sedang gangguan."));
+            alert("Gagal memproses kasir: " + (result.message || "Periksa konfigurasi API Key Anda."));
+            orderBtn.innerText = "Beli Sekarang";
+            orderBtn.disabled = false;
         }
     } catch (err) {
         console.error(err);
-        alert("Terjadi masalah jaringan komunikasi ke server.");
-    } finally {
+        alert("Terjadi masalah komunikasi data ke backend gateway.");
         orderBtn.innerText = "Beli Sekarang";
         orderBtn.disabled = false;
     }
