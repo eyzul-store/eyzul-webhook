@@ -3,197 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eyzulstore 🦋</title>
+    <title>Eyzulstore - Reseller Resmi Sekalipay</title>
+    <!-- Menggunakan Bootstrap & FontAwesome untuk reka bentuk kedai yang sangat kemas dan moden -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <link href="https://cloudflare.com" rel="stylesheet">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f0f12; color: #f5f5f7; padding: 20px; text-align: center; }
-        .container { max-width: 440px; margin: 30px auto; background: #1a1a24; padding: 24px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #2e2e3f; text-align: left; }
-        h2 { text-align: center; color: #50b6ff; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        p.subtitle { text-align: center; color: #9898a0; font-size: 14px; margin-bottom: 25px; }
-        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; margin-top: 15px; }
-        input, select, button { width: 100%; padding: 14px; border-radius: 8px; border: none; box-sizing: border-box; font-size: 15px; margin-top: 5px; }
-        input, select { background: #0f0f12; color: #fff; border: 1px solid #3a3a4e; transition: 0.2s; }
-        input:focus, select:focus { border-color: #50b6ff; outline: none; }
-        .flex-inputs { display: flex; gap: 10px; }
-        .flex-inputs div { flex: 1; }
-        button { background: #50b6ff; color: #000; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.2s; }
-        button:hover { background: #3fa5ef; }
-        button:disabled { background: #4b5563; color: #9ca3af; cursor: not-allowed; }
-        .status-msg { font-size: 12px; color: #50b6ff; display: block; margin-top: 5px; }
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar { background-color: #1e293b; border-bottom: 2px solid #334155; }
+        .card-custom { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .form-control, .form-select { background-color: #0f172a; border: 1px solid #475569; color: #ffffff; }
+        .form-control:focus, .form-select:focus { background-color: #0f172a; border-color: #38bdf8; color: #ffffff; box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25); }
+        .btn-primary-custom { background: linear-gradient(135deg, #38bdf8, #0284c7); border: none; color: white; font-weight: 600; padding: 12px; border-radius: 8px; transition: all 0.3s; }
+        .btn-primary-custom:hover { background: linear-gradient(135deg, #0284c7, #0369a1); transform: translateY(-2px); }
+        .badge-status { background-color: #0284c7; font-size: 0.8rem; padding: 5px 10px; border-radius: 20px; }
+        footer { margin-top: 50px; color: #64748b; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>🏪 Eyzulstore 🦋</h2>
-    <p class="subtitle">Aplikasi, Game, Pulsa & Layanan Digital Lengkap</p>
-    
-    <!-- Universal Input Form Section -->
-    <div id="targetFormContainer">
-        <label id="mainInputLabel" for="targetAccount">ID Akun Tujuan / Nomor HP</label>
-        <div class="flex-inputs">
-            <div id="userIdBox">
-                <input type="text" id="targetAccount" placeholder="Contoh: 12345678" required>
-            </div>
-            <div id="zoneIdBox" style="display: none;">
-                <input type="text" id="targetZone" placeholder="Zona/Server (1234)">
+    <!-- Header / Navbar Kedai -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container py-2">
+            <a class="navbar-brand fw-bold text-info" href="#"><i class="fa-solid fa-gamepad me-2"></i>EYZULSTORE</a>
+            <span class="badge badge-status"><i class="fa-solid fa-circle-check me-1"></i> Verified Reseller</span>
+        </div>
+    </nav>
+
+    <!-- Kandungan Utama Form Pembelian -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                
+                <!-- Kotak Amaran Kuning Sekiranya Sistem Gagal Sambung -->
+                <div id="error-message" class="alert alert-warning border-warning shadow-sm mb-4" style="display: none; background-color: #fef08a; color: #713f12;">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i> <strong>Gagal menarik seluruh menu database Sekalipay.</strong> Sila semak sambungan API Key biskita.
+                </div>
+
+                <div class="card card-custom p-4">
+                    <h4 class="fw-bold mb-4 text-center text-light"><i class="fa-solid fa-cart-shopping me-2 text-info"></i>Formulir Top-Up Digital</h4>
+                    
+                    <!-- Pilihan Kategori Layanan -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"><i class="fa-solid fa-layer-group me-2 text-secondary"></i>1. Pilih Layanan / Produk</label>
+                        <select id="product-select" class="form-select form-select-lg">
+                            <option value="">-- Memuatkan menu produk Sekalipay... --</option>
+                        </select>
+                    </div>
+
+                    <!-- Input ID Target Pengguna -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold"><i class="fa-solid fa-id-card me-2 text-secondary"></i>2. Masukkan ID Sasaran / No HP</label>
+                        <input type="text" id="target-id" class="form-control form-control-lg" placeholder="Contoh: 12345678 (9923) atau 0123456789">
+                        <div class="form-text text-muted">Pastikan format ID sasaran biskita dimasukkan dengan betul.</div>
+                    </div>
+
+                    <!-- Butang Pengesahan Pembelian -->
+                    <button onclick="prosesTransaksi()" class="btn btn-primary-custom w-100 btn-lg shadow">
+                        <i class="fa-solid fa-wallet me-2"></i> Beli & Bayar Sekarang
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
-    
-    <!-- Universal Product Dropdown -->
-    <label for="productCode">Pilih Layanan & Produk</label>
-    <select id="productCode" onchange="handleProductChange()">
-        <option value="">-- Memuat Semua Layanan Live... --</option>
-    </select>
-    <span id="syncStatus" class="status-msg">🔄 Menghubungkan seluruh database Sekalipay...</span>
 
-    <button id="orderBtn" onclick="submitResellerOrder()" disabled>Beli Sekarang</button>
-</div>
+    <!-- Footer Kedai -->
+    <footer class="text-center py-4">
+        <div class="container">
+            <p>&copy; 2026 <strong>Eyzulstore</strong>. Powered by Sekalipay API Gateway.</p>
+        </div>
+    </footer>
 
-<script>
-document.addEventListener("DOMContentLoaded", loadFullLiveCatalog);
-let completeInventoryMap = {};
+    <!-- Logik Pengaturcaraan JavaScript Penghubung Sistem Vercel -->
+    <script>
+        // Pautan Domain Utama Vercel Biskita Yang Sudah Sah Hijau [image_V1fU-u.png]
+        const BACKEND_URL = 'https://vercel.app';
 
-async function loadFullLiveCatalog() {
-    const dropdown = document.getElementById('productCode');
-    const syncStatus = document.getElementById('syncStatus');
-    const orderBtn = document.getElementById('orderBtn');
-
-    try {
-        const res = await fetch('/api/get-catalog');
-        const data = await res.json();
-
-        if (data.success && data.products.length > 0) {
-            dropdown.innerHTML = '<option value="">-- Pilih Produk / Paket --</option>';
-            
-            // Groups absolutely everything dynamically by its original category label
-            let groupedItems = {};
-            data.products.forEach(item => {
-                let categoryName = item.game_name || item.category || "Layanan Premium / Aplikasi";
-                if (!groupedItems[categoryName]) groupedItems[categoryName] = [];
-                groupedItems[categoryName].push(item);
-            });
-
-            // Loop through all categorized items and insert them into the selection UI
-            for (let category in groupedItems) {
-                const group = document.createElement('optgroup');
-                group.label = category;
+        // 1. Fungsi Utama Mengambil Senarai Katalog Produk Dari Sekalipay
+        async function muatKatalogLayanan() {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/get-catalog`);
+                const data = await res.json();
                 
-                groupedItems[category].forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.code;
-                    const cleanPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(item.price);
-                    option.textContent = `${item.name} (${cleanPrice})`;
-                    group.appendChild(option);
+                const selectElement = document.getElementById('product-select');
+                selectElement.innerHTML = '<option value="">-- Sila Pilih Layanan --</option>';
+                
+                // Semak jika data katalog wujud dan berjaya ditarik
+                if (data && data.status !== false && (Array.isArray(data) || data.data)) {
+                    const senaraiProduk = Array.isArray(data) ? data : data.data;
+                    
+                    senaraiProduk.forEach(item => {
+                        let opt = document.createElement('option');
+                        // Memetakan nilai harga dan nama mengikut struktur data Sekalipay [image_BgxBB-.png]
+                        opt.value = item.price || item.harga || '0'; 
+                        opt.innerText = `${item.name || item.layanan} - Rp ${Number(item.price || item.harga).toLocaleString('id-ID')}`;
+                        selectElement.appendChild(opt);
+                    });
+                } else {
+                    // Papar ralat kuning jika data dari Sekalipay kosong atau tidak sah [image_PRndge.png]
+                    document.getElementById('error-message').style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Ralat Katalog:', err);
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
 
-                    // Map all details into local browser memory
-                    completeInventoryMap[item.code] = {
-                        price: item.price,
-                        name: `${category} ${item.name}`,
-                        game: category.toLowerCase()
-                    };
-                });
-                dropdown.appendChild(group);
+        // 2. Fungsi Utama Memproses Pembelian & Menjana Resit Pembayaran Sekalipay
+        async function prosesTransaksi() {
+            const price = document.getElementById('product-select').value;
+            const target = document.getElementById('target-id').value;
+            const selectEl = document.getElementById('product-select');
+            const productName = selectEl.options[selectEl.selectedIndex].text;
+
+            if (!price || !target) {
+                alert('Harap maaf biskita, sila pilih produk dan isi ID sasaran terlebih dahulu!');
+                return;
             }
 
-            syncStatus.innerText = "✅ Semua Produk Sekalipay Berhasil Dimuat Live!";
-            syncStatus.style.color = "#4caf50";
-            orderBtn.disabled = false;
-        } else {
-            throw new Error("Empty inventory stream");
+            try {
+                // Menghantar data pembelian ke fail api/create-payment.js di Vercel [image_V1fU-u.png]
+                const res = await fetch(`${BACKEND_URL}/api/create-payment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        priceAmount: price,
+                        targetId: target,
+                        productName: productName || 'Pembelian Layanan'
+                    })
+                });
+                
+                const data = await res.json();
+                
+                // Jika Sekalipay membalas dengan link pembayaran, bawa pelanggan ke sana [image_lesWMz.png]
+                if (data && (data.payment_url || data.url || (data.data && data.data.payment_url))) {
+                    const urlBayar = data.payment_url || data.url || data.data.payment_url;
+                    window.location.href = urlBayar; 
+                } else {
+                    alert('Gagal menjana transaksi. Sila pastikan baki akait reseller biskita mencukupi.');
+                }
+            } catch (err) {
+                console.error('Ralat Pembayaran:', err);
+                alert('Ralat sistem pembayaran. Sila hubungi admin kedai biskita.');
+            }
         }
-    } catch (err) {
-        console.error(err);
-        dropdown.innerHTML = '<option value="">Gagal sinkronisasi data. Muat ulang halaman.</option>';
-        syncStatus.innerText = "⚠️ Gagal menarik seluruh menu database Sekalipay.";
-        syncStatus.style.color = "#ffdd00";
-    }
-}
 
-function handleProductChange() {
-    const selection = document.getElementById('productCode').value;
-    const zoneBox = document.getElementById('zoneIdBox');
-    const mainLabel = document.getElementById('mainInputLabel');
-    const mainInput = document.getElementById('targetAccount');
-
-    if (!selection || !completeInventoryMap[selection]) return;
-    
-    const activeItem = completeInventoryMap[selection];
-
-    // Smart Forms Adaptor: Handles Zone IDs for Games and structures inputs for phone numbers, apps, or links
-    if (activeItem.game.includes("mobile legends") || activeItem.game.includes("mlbb")) {
-        mainLabel.innerText = "Data Akun Mobile Legends";
-        mainInput.placeholder = "User ID (Contoh: 12345678)";
-        zoneBox.style.display = "block";
-    } else if (activeItem.game.includes("dana") || activeItem.game.includes("pulsa") || activeItem.game.includes("gopay") || activeItem.game.includes("ovo") || activeItem.game.includes("linkaja") || activeItem.game.includes("shopeepay")) {
-        mainLabel.innerText = "Nomor Handphone Tujuan";
-        mainInput.placeholder = "Contoh: 081234567890";
-        zoneBox.style.display = "none";
-    } else if (activeItem.game.includes("premium") || activeItem.game.includes("aplikasi") || activeItem.game.includes("streaming") || activeItem.game.includes("netflix") || activeItem.game.includes("spotify")) {
-        mainLabel.innerText = "Email Pengguna / Kontak WhatsApp Pembeli";
-        mainInput.placeholder = "Contoh: nama@email.com atau WhatsApp";
-        zoneBox.style.display = "none";
-    } else {
-        mainLabel.innerText = "Target ID Akun / Nomor Pemesanan";
-        mainInput.placeholder = "Masukkan Player ID atau Akun Tujuan";
-        zoneBox.style.display = "none";
-    }
-}
-
-async function submitResellerOrder() {
-    const orderBtn = document.getElementById('orderBtn');
-    const idInput = document.getElementById('targetAccount').value.trim();
-    const zoneInput = document.getElementById('targetZone').value.trim();
-    const selectedProduct = document.getElementById('productCode').value;
-
-    if (!idInput) {
-        alert("Mohon isi kolom data target pengiriman!");
-        return;
-    }
-
-    const activeItem = completeInventoryMap[selectedProduct];
-    
-    // Auto-compiles composite fields for database queries
-    let calculatedTarget = idInput;
-    if (activeItem.game.includes("mobile legends") || activeItem.game.includes("mlbb")) {
-        if (!zoneInput) {
-            alert("Mohon masukkan Zone ID/Server Game Anda!");
-            return;
-        }
-        calculatedTarget = `${idInput}(${zoneInput})`;
-    }
-
-    orderBtn.innerText = "Membuka Kasir Pembayaran...";
-    orderBtn.disabled = true;
-
-    try {
-        const response = await fetch('/api/create-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                priceAmount: activeItem.price,
-                targetId: calculatedTarget,
-                productName: activeItem.name
-            })
-        });
-
-        const result = await response.json();
-
-        if (result.success && result.paymentUrl) {
-            window.location.href = result.paymentUrl;
-        } else {
-            alert("Gagal memproses kasir: " + (result.message || "Periksa data input Anda."));
-            orderBtn.innerText = "Beli Sekarang";
-            orderBtn.disabled = false;
-        }
-    } catch (err) {
-        console.error(err);
-        alert("Terjadi masalah komunikasi data ke backend.");
-        orderBtn.innerText = "Beli Sekarang";
-        orderBtn.disabled = false;
-    }
-}
-</script>
-
+        // Jalankan fungsi memanggil data sebaik sahaja browser memuatkan kedai
+        window.onload = muatKatalogLayanan;
+    </script>
 </body>
 </html>
