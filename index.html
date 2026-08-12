@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyzulstore - Reseller Center 🦋</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f0f12; color: #f5f5f7; padding: 20px; text-align: center; }
+        .container { max-width: 420px; margin: 40px auto; background: #1a1a24; padding: 24px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #2e2e3f; }
+        h2 { margin-bottom: 5px; color: #50b6ff; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        p { color: #9898a0; font-size: 14px; margin-bottom: 25px; }
+        label { display: block; text-align: left; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+        input, select, button { width: 100%; padding: 14px; margin-bottom: 20px; border-radius: 8px; border: none; box-sizing: border-box; font-size: 15px; }
+        input, select { background: #0f0f12; color: #fff; border: 1px solid #3a3a4e; transition: 0.2s; }
+        input:focus, select:focus { border-color: #50b6ff; outline: none; }
+        button { background: #50b6ff; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        button:hover { background: #3fa5ef; }
+        button:disabled { background: #4b5563; color: #9ca3af; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🏪 Eyzulstore 🦋</h2>
+    <p>Layanan Top-Up Game & Voucher Instan</p>
+    
+    <label for="targetAccount">Target ID Akun (Game ID / Nomor Tujuan)</label>
+    <input type="text" id="targetAccount" placeholder="Contoh: 12345678 (2345)" required>
+    
+    <label for="productCode">Pilih Nominal Produk</label>
+    <select id="productCode">
+        <option value="ML_BB_86">Mobile Legends — 86 Diamonds (Rp 20.000)</option>
+        <option value="ML_BB_172">Mobile Legends — 172 Diamonds (Rp 40.000)</option>
+        <option value="FF_140">Free Fire — 140 Diamonds (Rp 19.000)</option>
+        <option value="PUBG_60">PUBG Mobile — 60 UC (Rp 14.500)</option>
+    </select>
+
+    <button id="orderBtn" onclick="submitResellerOrder()">Beli Sekarang</button>
+</div>
+
+<script>
+async function submitResellerOrder() {
+    const orderBtn = document.getElementById('orderBtn');
+    const targetInput = document.getElementById('targetAccount').value.trim();
+    const selectedProduct = document.getElementById('productCode').value;
+
+    if (!targetInput) {
+        alert("Mohon masukkan nomor target akun pengguna!");
+        return;
+    }
+
+    orderBtn.innerText = "Memproses Transaksi...";
+    orderBtn.disabled = true;
+
+    try {
+        const response = await fetch('/api/place-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                uniqueProductCode: selectedProduct,
+                targetCustomerAccount: targetInput
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert("Transaksi Berhasil dikirim! Item akan masuk secara otomatis ke akun pembeli.");
+        } else {
+            alert("Gagal memproses transaksi: " + (result.message || "Saldo tidak cukup atau produk sedang gangguan."));
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Terjadi masalah jaringan komunikasi ke server.");
+    } finally {
+        orderBtn.innerText = "Beli Sekarang";
+        orderBtn.disabled = false;
+    }
+}
+</script>
+
+</body>
+</html>
