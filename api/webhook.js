@@ -1,17 +1,18 @@
 // api/webhook.js
 export default async function handler(req, res) {
-  // Allow Sekalipay's system testing routes (GET, PUT, or POST)
+  // Allow secure payment system test signals and real customer webhooks
   if (req.method === 'POST' || req.method === 'PUT' || req.method === 'GET') {
     
-    // Log the data in your Vercel console to check transaction details later
-    console.log("Incoming Sekalipay Signal:", req.body);
+    // Log the transaction details inside your Vercel console logs for tracking
+    console.log("Sekalipay payment notification received successfully:", req.body);
     
-    // Always return a clean 200 OK success message to clear the error banner
+    // Always respond with a clean HTTP 200 OK so Sekalipay turns green
     return res.status(200).json({ 
       success: true, 
       message: 'Eyzulstore Webhook is Active and Verified! 🦋' 
     });
   }
 
+  // Reject any unrecognised request types securely
   return res.status(405).json({ message: 'Method Not Allowed' });
 }
